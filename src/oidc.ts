@@ -25,17 +25,17 @@ export async function createDecodeAccessToken(params: {
         decodedAccessTokenSchema: zDecodedAccessToken
     });
 
-    function decodeAccessToken(params: {
+    async function decodeAccessToken(params: {
         authorizationHeaderValue: string | undefined;
         requiredRole?: string;
-    }): DecodedAccessToken {
+    }): Promise<DecodedAccessToken> {
         const { authorizationHeaderValue, requiredRole } = params;
 
         if (authorizationHeaderValue === undefined) {
             throw new HTTPException(401);
         }
 
-        const result = verifyAndDecodeAccessToken({
+        const result = await verifyAndDecodeAccessToken({
             accessToken: authorizationHeaderValue.replace(/^Bearer /, "")
         });
 

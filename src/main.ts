@@ -83,7 +83,7 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = decodeAccessToken({
+            const decodedAccessToken = await decodeAccessToken({
                 authorizationHeaderValue: c.req.header("Authorization")
             });
 
@@ -150,7 +150,7 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = decodeAccessToken({
+            const decodedAccessToken = await decodeAccessToken({
                 authorizationHeaderValue: c.req.header("Authorization")
             });
 
@@ -205,7 +205,7 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = decodeAccessToken({
+            const decodedAccessToken = await decodeAccessToken({
                 authorizationHeaderValue: c.req.header("Authorization")
             });
 
@@ -245,7 +245,7 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = decodeAccessToken({
+            const decodedAccessToken = await decodeAccessToken({
                 authorizationHeaderValue: c.req.header("Authorization")
             });
 

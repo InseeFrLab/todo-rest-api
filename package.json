@@ -22,7 +22,7 @@
         "tsafe": "^1.7.2",
         "url-join": "^5.0.0",
         "zod": "^3.23.8",
-        "oidc-spa": "^7.1.7"
+        "oidc-spa": "^8.6.11"
     },
     "devDependencies": {
         "@types/node": "^20.12.12",
