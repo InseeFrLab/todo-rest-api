@@ -1,27 +1,32 @@
 import { z, createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { serve } from "@hono/node-server";
-import { HTTPException } from "hono/http-exception";
 import { getUserTodoStore } from "./todo";
 import { cors } from "hono/cors";
 import { assert } from "tsafe/assert";
-import { createDecodeAccessToken } from "./oidc";
+import { getUser, bootstrapAuth } from "./auth";
 
 (async function main() {
-    const { decodeAccessToken } = await createDecodeAccessToken({
-        issuerUri: (() => {
-            const value = process.env.OIDC_ISSUER_URI;
 
-            assert(value !== undefined, "OIDC_ISSUER_URI must be defined");
+    const issuerUri = (() => {
+        const value = process.env.OIDC_ISSUER_URI;
 
-            return value;
-        })(),
-        audience: (() => {
-            const value = process.env.OIDC_AUDIENCE;
+        assert(value !== undefined, "OIDC_ISSUER_URI must be defined");
 
-            assert(value !== undefined, "OIDC_AUDIENCE must be defined");
+        return value;
+    })();
 
-            return value;
-        })()
+    const audience = (() => {
+        const value = process.env.OIDC_AUDIENCE;
+
+        assert(value !== undefined, "OIDC_AUDIENCE must be defined");
+
+        return value;
+    })();
+
+    bootstrapAuth({
+        implementation: "real",
+        issuerUri,
+        expectedAudience: audience
     });
 
     const app = new OpenAPIHono();
@@ -83,16 +88,17 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = await decodeAccessToken({
-                authorizationHeaderValue: c.req.header("Authorization")
-            });
+
+            const user = await getUser(c.req);
 
             const { id } = c.req.valid("param");
             const { text, isDone } = c.req.valid("json");
 
-            const todoStore = getUserTodoStore(decodedAccessToken.sub);
+            const todoStore = getUserTodoStore(user.id);
 
-            const todo = todoStore.getAll().find(({ id: todoId }) => todoId === id);
+            const todo = todoStore
+                .getAll()
+                .find(({ id: todoId }) => todoId === id);
 
             assert(todo !== undefined);
 
@@ -139,28 +145,24 @@ import { createDecodeAccessToken } from "./oidc";
                             schema: z.object({
                                 id: z.string().openapi({
                                     example: "123",
-                                    description: "The id of the newly created todo item"
+                                    description:
+                                        "The id of the newly created todo item"
                                 })
                             })
                         }
                     },
-                    description: "Create a new todo item returns the newly created todo item's id"
+                    description:
+                        "Create a new todo item returns the newly created todo item's id"
                 }
             }
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = await decodeAccessToken({
-                authorizationHeaderValue: c.req.header("Authorization")
-            });
-
-            if (decodedAccessToken === undefined) {
-                throw new HTTPException(401);
-            }
+            const user = await getUser(c.req);
 
             const { text } = c.req.valid("json");
 
-            const todoStore = getUserTodoStore(decodedAccessToken.sub);
+            const todoStore = getUserTodoStore(user.id);
 
             const id = Math.random().toString();
 
@@ -205,15 +207,9 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = await decodeAccessToken({
-                authorizationHeaderValue: c.req.header("Authorization")
-            });
+            const user = await getUser(c.req);
 
-            if (decodedAccessToken === undefined) {
-                throw new HTTPException(401);
-            }
-
-            const todos = getUserTodoStore(decodedAccessToken.sub).getAll();
+            const todos = getUserTodoStore(user.id).getAll();
 
             return c.json(todos);
         });
@@ -245,17 +241,11 @@ import { createDecodeAccessToken } from "./oidc";
         });
 
         app.openapi(route, async c => {
-            const decodedAccessToken = await decodeAccessToken({
-                authorizationHeaderValue: c.req.header("Authorization")
-            });
+            const user = await getUser(c.req);
 
             const { id } = c.req.valid("param");
 
-            if (decodedAccessToken === undefined) {
-                throw new HTTPException(401);
-            }
-
-            getUserTodoStore(decodedAccessToken.sub).remove(id);
+            getUserTodoStore(user.id).remove(id);
 
             return c.json({
                 message: "Todo item deleted"
@@ -284,5 +274,7 @@ import { createDecodeAccessToken } from "./oidc";
         port
     });
 
-    console.log(`\nServer running. OpenAPI documentation available at http://localhost:${port}/doc`);
+    console.log(
+        `\nServer running. OpenAPI documentation available at http://localhost:${port}/doc`
+    );
 })();

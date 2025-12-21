@@ -230,10 +230,10 @@ get-tsconfig@^4.7.5:
   dependencies:
     resolve-pkg-maps "^1.0.0"
 
-hono@^4.3.2:
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-4.3.9.tgz#3c866d527241dc4d423ef6a4e1fb1f8ed032278e"
-  integrity sha512-6c5LVE23HnIS8iBhY+XPmYJlPeeClznOi7mBNsAsJCgxo8Ciz75LTjqRUf5wv4RYq8kL+1KPLUZHCtKmbZssNg==
+hono@^4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-4.11.1.tgz#cb1b0c045fc74a96c693927234c95a45fb46ab0b"
+  integrity sha512-KsFcH0xxHes0J4zaQgWbYwmz3UPOOskdqZmItstUG93+Wk1ePBLkLGwbP9zlmh1BFUiL8Qp+Xfu9P7feJWpGNg==
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -245,10 +245,10 @@ minimist@^1.2.6:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
-oidc-spa@^8.6.11:
-  version "8.6.11"
-  resolved "https://registry.yarnpkg.com/oidc-spa/-/oidc-spa-8.6.11.tgz#8214e722def94d83e116096909b01be7acd08446"
-  integrity sha512-0K4vq4fkm+BXXOLHtd1+1wH+BidPnN25CrX9PY6pjSUmIuFbnWVuPAl1zzEM6GfmjnU4oVf16ww3fCjbK1M/cA==
+oidc-spa@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/oidc-spa/-/oidc-spa-8.7.0.tgz#8d690ecd2aeec2ad044f9e81d71cb79ab40ee5d7"
+  integrity sha512-3EJXwofO07+c7kzsJvE0hqKWG72Y/+yiEov3802dHcPFwPR9ro3tGpk1ICsC8HNSI0ZbKSfszrVW6Ng4G9v1gg==
 
 openapi3-ts@^4.1.2:
   version "4.3.1"
@@ -279,10 +279,10 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-tsafe@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.7.2.tgz#0f63d414876287ad01b135f832722f93e22da374"
-  integrity sha512-dAPfQLhCfCRre5qs+Z5Q2a7s2CV7RxffZUmvj7puGaePYjECzWREJFd3w4XSFe/T5tbxgowfItA/JSSZ6Ma3dA==
+tsafe@^1.8.12:
+  version "1.8.12"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.8.12.tgz#68a410b4b7687ef497b1c85904b1215532335c3e"
+  integrity sha512-nFRqW0ttu/2o6XTXsHiVZWJBCOaxhVqZLg7dgs3coZNsCMPXPfwz+zPHAQA+70fNnVJLAPg1EgGIqK9Q84tvAw==
 
 tsx@^4.3.0:
   version "4.17.0"
@@ -322,6 +322,6 @@ yaml@^2.4.1:
   integrity sha512-B3VqDZ+JAg1nZpaEmWtTXUlBneoGx6CPM9b0TENK6aoSu5t73dItudwdgmi6tHlIZZId4dZ9skcAQ2UbcyAeVA==
 
 zod@^3.23.8:
-  version "3.23.8"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
-  integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
+  version "3.25.76"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
+  integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==

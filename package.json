@@ -14,21 +14,26 @@
     },
     "author": "u/garronej",
     "license": "MIT",
-    "keywords": ["todo", "todos", "rest", "api"],
+    "keywords": [
+        "todo",
+        "todos",
+        "rest",
+        "api"
+    ],
     "dependencies": {
         "@hono/node-server": "^1.11.1",
         "@hono/zod-openapi": "^0.13.0",
-        "hono": "^4.3.2",
-        "tsafe": "^1.7.2",
+        "hono": "^4.11.1",
+        "oidc-spa": "^8.7.0",
+        "tsafe": "^1.8.12",
         "url-join": "^5.0.0",
-        "zod": "^3.23.8",
-        "oidc-spa": "^8.6.11"
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@types/node": "^20.12.12",
         "@vercel/ncc": "^0.38.1",
         "dotenv-cli": "^7.4.1",
-        "typescript": "^5.4.5",
-        "tsx": "^4.3.0"
+        "tsx": "^4.3.0",
+        "typescript": "^5.4.5"
     }
 }
