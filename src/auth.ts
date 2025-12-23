@@ -25,20 +25,23 @@ export async function getUser(
     requiredRole?: "realm-admin" | "support-staff"
 ): Promise<User> {
 
-    const { isSuccess, debugErrorMessage, decodedAccessToken } =
+    const { isSuccess, errorCause, debugErrorMessage, decodedAccessToken } =
         await validateAndDecodeAccessToken({
             request: {
                 url: req.url,
                 method: req.method,
-                headers: {
-                    Authorization: req.header("Authorization"),
-                    DPoP: req.header("DPoP")
-                }
+                getHeaderValue: headerName => req.header(headerName)
             }
         });
 
     if (!isSuccess) {
-        console.warn(debugErrorMessage);
+
+        if( errorCause === "missing Authorization header" ){
+            console.warn("Anonymous request");
+        }else{
+            console.warn(debugErrorMessage);
+        }
+
         throw new HTTPException(401);
     }
 
