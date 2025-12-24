@@ -37,6 +37,9 @@ export async function getUser(
     if (!isSuccess) {
 
         if( errorCause === "missing Authorization header" ){
+            // Demo shortcut: we return 401 on missing Authorization, but a mixed
+            // public/private endpoint could instead return undefined here and let
+            // the caller decide whether to process an anonymous request.
             console.warn("Anonymous request");
         }else{
             console.warn(debugErrorMessage);
