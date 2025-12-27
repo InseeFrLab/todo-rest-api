@@ -1,4 +1,4 @@
-import { oidcSpa } from "oidc-spa/server";
+import { oidcSpa, extractRequestAuthContext } from "oidc-spa/server";
 import { z } from "zod";
 import { HTTPException } from "hono/http-exception";
 import type { HonoRequest } from "hono";
@@ -9,7 +9,7 @@ const { bootstrapAuth, validateAndDecodeAccessToken } = oidcSpa
             sub: z.string(),
             realm_access: z.object({
                 roles: z.array(z.string())
-            })
+            }).optional()
         })
     })
     .createUtils();
@@ -24,39 +24,46 @@ export async function getUser(
     req: HonoRequest,
     requiredRole?: "realm-admin" | "support-staff"
 ): Promise<User> {
+    const requestAuthContext = extractRequestAuthContext({
+        request: req,
+        trustProxy: true
+    });
 
-    const { isSuccess, errorCause, debugErrorMessage, decodedAccessToken } =
-        await validateAndDecodeAccessToken({
-            request: {
-                url: req.url,
-                method: req.method,
-                getHeaderValue: headerName => req.header(headerName)
-            }
-        });
+    if( !requestAuthContext ){
+        // Demo shortcut: we return 401 on missing Authorization, but a mixed
+        // public/private endpoint could instead return undefined here and let
+        // the caller decide whether to process an anonymous request.
+        console.warn("Anonymous request");
+        throw new HTTPException(401); // Unauthorized
+    }
+
+    if (!requestAuthContext.isWellFormed) {
+        console.warn(requestAuthContext.debugErrorMessage);
+        throw new HTTPException(400); // Bad Request
+    }
+
+    const { isSuccess, debugErrorMessage, decodedAccessToken } =
+        await validateAndDecodeAccessToken(
+            requestAuthContext.accessTokenAndMetadata
+        );
 
     if (!isSuccess) {
+        console.warn(debugErrorMessage);
+        throw new HTTPException(401); // Unauthorized
+    }
 
-        if( errorCause === "missing Authorization header" ){
-            // Demo shortcut: we return 401 on missing Authorization, but a mixed
-            // public/private endpoint could instead return undefined here and let
-            // the caller decide whether to process an anonymous request.
-            console.warn("Anonymous request");
-        }else{
-            console.warn(debugErrorMessage);
+    // Your custom Authorization logic: Grant per request access depending
+    // on the access token claim.
+    if (requiredRole) {
+        if (!decodedAccessToken.realm_access?.roles.includes(requiredRole)) {
+            console.warn(`User missing role: ${requiredRole}`);
+            throw new HTTPException(403); // Forbidden
         }
-
-        throw new HTTPException(401);
     }
 
-    if (
-        requiredRole !== undefined &&
-        !decodedAccessToken.realm_access.roles.includes(requiredRole)
-    ) {
-        console.warn(`User missing role: ${requiredRole}`);
-        throw new HTTPException(403);
-    }
-
-    return {
+    const user: User = {
         id: decodedAccessToken.sub
     };
+
+    return user;
 }

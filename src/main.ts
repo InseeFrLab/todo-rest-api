@@ -242,7 +242,7 @@ import { getUser, bootstrapAuth } from "./auth";
 
         app.openapi(route, async c => {
             const user = await getUser(c.req);
-
+            
             const { id } = c.req.valid("param");
 
             getUserTodoStore(user.id).remove(id);
