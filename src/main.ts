@@ -1,12 +1,12 @@
 import { z, createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { serve } from "@hono/node-server";
+import { createNodeWebSocket } from "@hono/node-ws";
 import { getUserTodoStore } from "./todo";
 import { cors } from "hono/cors";
 import { assert } from "tsafe/assert";
-import { getUser, bootstrapAuth } from "./auth";
+import { bootstrapAuth,  getUser, getUser_ws } from "./auth";
 
 (async function main() {
-
     const issuerUri = (() => {
         const value = process.env.OIDC_ISSUER_URI;
 
@@ -32,6 +32,25 @@ import { getUser, bootstrapAuth } from "./auth";
     const app = new OpenAPIHono();
 
     app.use("*", cors());
+
+    const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
+
+    app.get(
+        "/ws",
+        upgradeWebSocket(async c => {
+
+            const user = await getUser_ws({ req: c.req });
+
+            return {
+                onOpen: (_event, ws) => {
+                    ws.send(`Hello ${user.name}`);
+                },
+                onMessage(event, ws) {
+                    ws.send(`I'm not very smart, all I can do is repeat what you say: "${event.data}"`);
+                }
+            };
+        })
+    );
 
     {
         const route = createRoute({
@@ -88,8 +107,7 @@ import { getUser, bootstrapAuth } from "./auth";
         });
 
         app.openapi(route, async c => {
-
-            const user = await getUser(c.req);
+            const user = await getUser({ req: c.req });
 
             const { id } = c.req.valid("param");
             const { text, isDone } = c.req.valid("json");
@@ -158,7 +176,7 @@ import { getUser, bootstrapAuth } from "./auth";
         });
 
         app.openapi(route, async c => {
-            const user = await getUser(c.req);
+            const user = await getUser({ req: c.req });
 
             const { text } = c.req.valid("json");
 
@@ -207,7 +225,7 @@ import { getUser, bootstrapAuth } from "./auth";
         });
 
         app.openapi(route, async c => {
-            const user = await getUser(c.req);
+            const user = await getUser({ req: c.req });
 
             const todos = getUserTodoStore(user.id).getAll();
 
@@ -241,8 +259,8 @@ import { getUser, bootstrapAuth } from "./auth";
         });
 
         app.openapi(route, async c => {
-            const user = await getUser(c.req);
-            
+            const user = await getUser({ req: c.req });
+
             const { id } = c.req.valid("param");
 
             getUserTodoStore(user.id).remove(id);
@@ -269,10 +287,12 @@ import { getUser, bootstrapAuth } from "./auth";
 
     const port = parseInt(process.env.PORT);
 
-    serve({
+    const server = serve({
         fetch: app.fetch,
         port
     });
+
+    injectWebSocket(server);
 
     console.log(
         `\nServer running. OpenAPI documentation available at http://localhost:${port}/doc`

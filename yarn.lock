@@ -134,6 +134,13 @@
   resolved "https://registry.yarnpkg.com/@hono/node-server/-/node-server-1.11.1.tgz#f4c7bea7f3d52760b1950d6b8aeb900cc59142d3"
   integrity sha512-GW1Iomhmm1o4Z+X57xGby8A35Cu9UZLL7pSMdqDBkD99U5cywff8F+8hLk5aBTzNubnsFAvWQ/fZjNwPsEn9lA==
 
+"@hono/node-ws@^1.0.3":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@hono/node-ws/-/node-ws-1.2.0.tgz#93041d045a92aebc0e6e5b98d263ff32d37312cd"
+  integrity sha512-OBPQ8OSHBw29mj00wT/xGYtB6HY54j0fNSdVZ7gZM3TUeq0So11GXaWtFf1xWxQNfumKIsj0wRuLKWfVsO5GgQ==
+  dependencies:
+    ws "^8.17.0"
+
 "@hono/zod-openapi@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@hono/zod-openapi/-/zod-openapi-0.13.0.tgz#6b9640529d7399302dad17ee8ce5d20d5937eab0"
@@ -315,6 +322,11 @@ which@^2.0.1:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
+
+ws@^8.17.0:
+  version "8.18.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.3.tgz#b56b88abffde62791c639170400c93dcb0c95472"
+  integrity sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==
 
 yaml@^2.4.1:
   version "2.4.2"
