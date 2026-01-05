@@ -25,7 +25,7 @@
         "@hono/node-ws": "^1.0.3",
         "@hono/zod-openapi": "^0.13.0",
         "hono": "^4.11.1",
-        "oidc-spa": "^8.7.10",
+        "oidc-spa": "^9.1.0",
         "tsafe": "^1.8.12",
         "url-join": "^5.0.0",
         "zod": "^3.23.8"
