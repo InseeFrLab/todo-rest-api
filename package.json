@@ -23,7 +23,13 @@
     "dependencies": {
         "@hono/node-server": "^1.11.1",
         "@hono/node-ws": "^1.0.3",
+        "@hono/otel": "^1.1.2",
         "@hono/zod-openapi": "^0.13.0",
+        "@opentelemetry/api": "^1.9.0",
+        "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
+        "@opentelemetry/sdk-metrics": "^1.26.0",
+        "@opentelemetry/sdk-node": "^0.53.0",
+        "@opentelemetry/sdk-trace-node": "^1.26.0",
         "hono": "^4.11.1",
         "oidc-spa": "^10.0.0",
         "tsafe": "^1.8.12",

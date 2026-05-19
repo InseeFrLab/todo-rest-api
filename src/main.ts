@@ -1,10 +1,14 @@
 import { z, createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
+import { httpInstrumentationMiddleware } from "@hono/otel";
 import { getUserTodoStore } from "./todo";
 import { cors } from "hono/cors";
 import { assert } from "tsafe/assert";
-import { bootstrapAuth,  getUser, getUser_ws } from "./auth";
+import { bootstrapAuth, getUser, getUser_ws } from "./auth";
+import { setupTracing } from "./telemetry";
+
+setupTracing();
 
 (async function main() {
     const issuerUri = (() => {
@@ -32,13 +36,16 @@ import { bootstrapAuth,  getUser, getUser_ws } from "./auth";
     const app = new OpenAPIHono();
 
     app.use("*", cors());
+    app.use(
+        "*",
+        httpInstrumentationMiddleware({ serviceName: "todo-rest-api" })
+    );
 
     const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
 
     app.get(
         "/ws",
         upgradeWebSocket(async c => {
-
             const user = await getUser_ws({ req: c.req });
 
             return {
@@ -46,7 +53,9 @@ import { bootstrapAuth,  getUser, getUser_ws } from "./auth";
                     ws.send(`Hello ${user.name}`);
                 },
                 onMessage(event, ws) {
-                    ws.send(`I'm not very smart, all I can do is repeat what you say: "${event.data}"`);
+                    ws.send(
+                        `I'm not very smart, all I can do is repeat what you say: "${event.data}"`
+                    );
                 }
             };
         })
